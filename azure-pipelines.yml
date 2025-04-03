@@ -6,32 +6,33 @@ pool:
 
 steps:
 - task: DotNetCoreCLI@2
-  displayName: 'Restore packages'
+  displayName: 'Restore'
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
-    feedsToUse: 'select'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Build project'
+  displayName: 'Build'
   inputs:
     command: 'build'
     projects: '**/*.csproj'
     arguments: '--configuration Release'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Pack NuGet package'
+  displayName: 'Pack'
   inputs:
     command: 'pack'
-    packagesToPack: '**/*.csproj'
-    versioningScheme: 'off'
-    configuration: 'Release'
+    packagesToPush: '**/*.csproj'
+    versioningScheme: 'byPrereleaseNumber'
+    majorVersion: '1'
+    minorVersion: '0'
+    patchVersion: '0'
+    outputDir: '$(Build.ArtifactStagingDirectory)'
 
 - task: NuGetCommand@2
-  displayName: 'Push NuGet package to feed'
+  displayName: 'Push to nugetNew Feed'
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
     nuGetFeedType: 'internal'
-    publishVscodeExe: false
-    allowPackageConflicts: true
+    publishVstsFeed: 'cb8768c4-3a53-4392-a111-45180bfacd5b/310076e7-3cb3-462e-b4a6-b22c6029b40a'
